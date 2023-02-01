@@ -1,4 +1,25 @@
+import datetime
 from django.db import models
+
+
+client = 'CL'
+service = 'SR'
+manager = 'MG'
+
+POSITIONS = [
+    (client, 'Клиент'),
+    (service, 'Сервис'),
+    (manager, 'Менеджер')
+]
+
+
+class UsersSilant(models.Model):
+    username = models.CharField(max_length=150, unique=True)
+    password = models.CharField()
+    user_email = models.EmailField()
+    position = models.CharField(max_length=2,
+                                choices=POSITIONS,
+                                default=client)
 
 
 # Справочник компаний
@@ -142,3 +163,12 @@ class Complaint(models.Model):
     date_recovery = models.DateField(blank=True)  # Дата восстановления
     downtime = models.IntegerField({date_recovery} - {date_refusal}, blank=True)  # Время простоя техники
     mashins_c = models.ForeignKey(Mashins, on_delete=models.CASCADE, max_length=32)
+
+    def prostoy(self, date_refusal, date_recovery, downtime):
+        date_refusal = self.date_refusal
+        date_recovery = self.date_recovery
+        d1 = datetime.date(f'{date_refusal}')
+        d2 = datetime.date(f'{date_recovery}')
+        du = d2 - d1
+        self.downtime = du
+        return self.downtime
