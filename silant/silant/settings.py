@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'silant',
+    'rest_framework',
+    'backend',
+    'frontend',
 
 ]
 

@@ -22,4 +22,4 @@ class DefaultSocialAccountAdapter:
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def validate_disconnect(self, account, accounts):
-        raise ValidationError("Can not disconnect")
+        raise ValidationError("Не удается отключить")
