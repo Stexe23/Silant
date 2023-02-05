@@ -148,7 +148,7 @@ class Mashins(models.Model):
 # Таблица по тех. обслуживанию
 class TO(models.Model):
     id_t = models.IntegerField(primary_key=True)
-    vid_TO = models.CharField(max_length=32)  # Вид ТО
+    vid_TO = models.ForeignKey(VidTOG, on_delete=models.CASCADE)  # Вид ТО
     date_TO = models.DateField()  # Дата проведения ТО
     mtbf = models.IntegerField()  # Наработка м/час
     num_order = models.CharField(max_length=32)
@@ -162,8 +162,8 @@ class Complaint(models.Model):
     id_c = models.IntegerField(primary_key=True)
     date_refusal = models.DateField()  # Дата отказа
     mtdf_c = models.IntegerField()  # Наработка м/час
-    reason_refusal = models.ForeignKey(NatureRefusalG, on_delete=models.CASCADE)
-    recovery_method = models.ForeignKey(RecoveryMethodG, on_delete=models.CASCADE)
+    reason_refusal = models.ForeignKey(NatureRefusalG, on_delete=models.CASCADE)  # Описание отказа
+    recovery_method = models.ForeignKey(RecoveryMethodG, on_delete=models.CASCADE)  # Способ восстановления
     spare = models.TextField(max_length=256)  # Использованные запасные части
     date_recovery = models.DateField(blank=True)  # Дата восстановления
     downtime = models.IntegerField({date_recovery} - {date_refusal}, blank=True)  # Время простоя техники
