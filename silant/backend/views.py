@@ -1,112 +1,108 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User, Group
-from django.views.generic.edit import CreateView
-from django.views.generic import ListView
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer
+
 from .models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
                      ModControllBridgeG, RecoveryMethodG, Complaint, UsersSilant, NatureRefusalG,
                      ClientG, Sersvice, VidTOG, TO)
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+from .serializers import (ModMotorGSerializer, ModTransmissionGSerializer, MashinsSerializer, ModMashinsGSerializer,
+                          ModDriveBridgeGSerializer, ModControllBridgeGSerializer, RecoveryMethodGSerializer,
+                          ComplaintSerializer, UsersSilantSerializer, NatureRefusalGSerializer,
+                          ClientGSerializer, SersviceSerializer, VidTOGSerializer, TOSerializer)
 
 
 # Список моделей моторов
-class ModMotorGList(ListView):
+class ModMotorGListCreate(generics.ListCreateAPIView):
     model = ModMotorG
-    ordering = 'model_motor'
+    queryset = ModMotorG.objects.all()
+    serializer_class = ModMotorGSerializer
 
 
 # Список моделей трансмиссий
-class ModTransmissionGList(ListView):
+class ModTransmissionGListCreate(generics.ListCreateAPIView):
     model = ModTransmissionG
-    ordering = 'model_transmission'
+    queryset = ModTransmissionG.objects.all()
+    serializer_class = ModTransmissionGSerializer
 
 
 # Список машин
-class MashinsList(ListView):
+class MashinsListCreate(generics.ListCreateAPIView):
     model = Mashins
-    ordering = 'zav_nom_mashins'
+    queryset = Mashins.objects.all()
+    serializer_class = MashinsSerializer
 
 
 # Список моделей машин
-class ModMashinsGList(ListView):
+class ModMashinsGListCreate(generics.ListCreateAPIView):
     model = ModMashinsG
-    ordering = 'model_mashins'
+    queryset = ModMashinsG.objects.all()
+    serializer_class = ModMashinsGSerializer
 
 
 # Список моделей ведущего моста
-class ModDriveBridgeGList(ListView):
+class ModDriveBridgeGListCreate(generics.ListCreateAPIView):
     model = ModDriveBridgeG
-    ordering = 'model_drive_bridge'
+    queryset = ModDriveBridgeG.objects.all()
+    serializer_class = ModDriveBridgeGSerializer
 
 
 # Список моделей управляемого моста
-class ModControllBridgeGList(ListView):
+class ModControllBridgeGListCreate(generics.ListCreateAPIView):
     model = ModControllBridgeG
-    ordering = 'model_controll_bridge'
+    queryset = ModControllBridgeG.objects.all()
+    serializer_class = ModControllBridgeGSerializer
 
 
 # Список способов восстановления
-class RecoveryMethodGList(ListView):
+class RecoveryMethodGListCreate(generics.ListCreateAPIView):
     model = RecoveryMethodG
-    ordering = 'recovery_method'
+    queryset = RecoveryMethodG.objects.all()
+    serializer_class = RecoveryMethodGSerializer
 
 
 # Список клиентов
-class ClientGList(ListView):
+class ClientGListCreate(generics.ListCreateAPIView):
     model = ClientG
-    ordering = 'client'
+    queryset = ClientG.objects.all()
+    serializer_class = ClientGSerializer
 
 
 # Список рекламаций
-class ComplaintList(ListView):
+class ComplaintListCreate(generics.ListCreateAPIView):
     model = Complaint
-    ordering = 'reason_refusal'
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintSerializer
 
 
 # Список характера отказов
-class NatureRefusalGList(ListView):
+class NatureRefusalGListCreate(generics.ListCreateAPIView):
     model = NatureRefusalG
-    ordering = 'reason_refusal'
+    queryset = NatureRefusalG.objects.all()
+    serializer_class = NatureRefusalGSerializer
 
 
 # Список видов ТО
-class VidTOGList(ListView):
+class VidTOGListCreate(generics.ListCreateAPIView):
     model = VidTOG
-    ordering = 'vid_TO'
+    queryset = VidTOG.objects.all()
+    serializer_class = VidTOGSerializer
 
 
 # Список ТО
-class TOList(ListView):
+class TOListCreate(generics.ListCreateAPIView):
     model = TO
-    ordering = 'vid_TO'
+    queryset = TO.objects.all()
+    serializer_class = TOSerializer
 
 
 # Список сервисных компаний
-class SersviceList(ListView):
+class SersviceListCreate(generics.ListCreateAPIView):
     model = Sersvice
-    ordering = 'service_company'
+    queryset = Sersvice.objects.all()
+    serializer_class = SersviceSerializer
 
 
 # Список пользователей
-class UsersSilantList(ListView):
+class UsersSilantListCreate(generics.ListCreateAPIView):
     model = UsersSilant
-    ordering = 'name'
+    queryset = UsersSilant.objects.all()
+    serializer_class = UsersSilantSerializer

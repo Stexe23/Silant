@@ -50,8 +50,9 @@ INSTALLED_APPS = [
 
     'silant',
     'rest_framework',
-    'backend',
-    'frontend',
+    'django_filters',
+    'backend.apps.BackendConfig',
+    'frontend.apps.FrontendConfig',
 
 ]
 

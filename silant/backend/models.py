@@ -108,13 +108,6 @@ class RecoveryMethodG(models.Model):
         return self.recovery_method
 
 
-# Связь таблиц машины, ТО и рекламаций
-# class MashinsTORef(models.Model):
-#    zav_nom_mashins = models.ForeignKey(Mashins, on_delete=models.CASCADE)
-#    id_t = models.ForeignKey(TO, on_delete=models.CASCADE)
-#    id_c = models.ForeignKey(Complaint, on_delete=models.CASCADE)
-
-
 # Справочник клиентов
 class ClientG(models.Model):
     client = models.CharField(max_length=128)
