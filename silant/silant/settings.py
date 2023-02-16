@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'backend.apps.BackendConfig',
-    'frontend.apps.FrontendConfig',
+    'frontend',
 
 ]
 
