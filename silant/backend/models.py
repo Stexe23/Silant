@@ -1,99 +1,106 @@
 import datetime
 from django.db import models
-
-
-client = 'CL'
-service = 'SR'
-manager = 'MG'
-
-POSITIONS = [
-    (client, 'Клиент'),
-    (service, 'Сервис'),
-    (manager, 'Менеджер')
-]
-
-
-# Класс пользователя
-class UsersSilant(models.Model):
-    username = models.CharField(max_length=150, unique=True)  # Логин
-    password = models.CharField(max_length=32)  # Пароль
-    user_email = models.EmailField()
-    name = models.CharField(max_length=128, blank=True)  # ФИО
-    position = models.CharField(max_length=2, choices=POSITIONS, default=client)
-    is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-
-    def __int__(self):
-        return self.name
+from users.models import CustomUser
 
 
 # Справочник компаний
 class Sersvice(models.Model):
-    service_company = models.CharField(max_length=128)
-    text_s = models.TextField(max_length=256)
+    name = models.ForeignKey(CustomUser, related_name='service_company', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Сервисная компания'
+        verbose_name_plural = 'Справочник сервисных компаний'
 
     def __str__(self):
-        return self.service_company
+        return self.name
 
 
 # Справочник по модели трансмиссии
 class ModTransmissionG(models.Model):
-    model_transmission = models.CharField(max_length=32)
-    text_t = models.TextField(max_length=256)
+    name = models.CharField('Модель трансмиссии', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Модель трансмиссии'
+        verbose_name_plural = 'Справочник моделей трансмиссии'
 
     def __str__(self):
-        return self.model_transmission
+        return self.name
 
 
 # Справочник по модели машины
 class ModMashinsG(models.Model):
-    model_mashins = models.CharField(max_length=32)
-    text_ma = models.TextField(max_length=256)
+    name = models.CharField('Модель машины', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Модель машины'
+        verbose_name_plural = 'Справочник моделей машины'
 
     def __str__(self):
-        return self.model_mashins
+        return self.name
 
 
 # Справочник по модели мотора
 class ModMotorG(models.Model):
-    model_motor = models.CharField(max_length=32)
-    text_mo = models.TextField(max_length=256)
+    name = models.CharField('Модель мотора', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Модель мотора'
+        verbose_name_plural = 'Справочник моделей мотора'
 
     def __str__(self):
-        return self.model_motor
+        return self.name
 
 
 # Справочник по модели ведущего моста
 class ModDriveBridgeG(models.Model):
-    model_drive_bridge = models.CharField(max_length=32)
-    text_db = models.TextField(max_length=256)
+    name = models.CharField('Ведущий мост', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Модель ведущего моста'
+        verbose_name_plural = 'Справочник моделей ведущего моста'
 
     def __str__(self):
-        return self.model_drive_bridge
+        return self.name
 
 
 # Справочник по модели управляемого моста
 class ModControllBridgeG(models.Model):
-    model_controll_bridge = models.CharField(max_length=32)
-    text_cb = models.TextField(max_length=256)
+    name = models.CharField('Управляемый мост', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Модель управляемого моста'
+        verbose_name_plural = 'Справочник моделей управляемого моста'
 
     def __str__(self):
-        return self.model_controll_bridge
+        return self.name
 
 
 # Справочник по видам тех. обслуживания
 class VidTOG(models.Model):
-    vid_TO = models.CharField(max_length=32)
-    text_v = models.TextField(max_length=256)
+    name = models.CharField('Вид ТО', max_length=32, unique=True)
+    description = models.TextField('Описание', max_length=256, null=False)
+
+    class Meta:
+        verbose_name = 'Вид технического обслуживания '
+        verbose_name_plural = 'Справочник видов ТО'
 
     def __str__(self):
-        return self.vid_TO
+        return self.name
 
 
 # Справочник по характерам отказа
 class NatureRefusalG(models.Model):
-    reason_refusal = models.CharField(max_length=32)
-    text_ref = models.TextField(max_length=256)
+    name = models.CharField('Характер отказа', max_length=50, unique=True)
+    description = models.TextField('Описание', max_length=256, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Характер отказа'
+        verbose_name_plural = 'Справочник характеров отказа'
 
     def __str__(self):
         return self.reason_refusal
