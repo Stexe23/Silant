@@ -1,6 +1,8 @@
 from django.contrib import admin
+
+from users.models import CustomUser
 from .models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
-                     ModControllBridgeG, RecoveryMethodG, Complaint, UsersSilant, NatureRefusalG,
+                     ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
                      ClientG, Sersvice, VidTOG, TO)
 # Register your models here.
 
@@ -20,4 +22,4 @@ admin.site.register(TO)
 admin.site.register(ClientG)
 admin.site.register(Sersvice)
 
-admin.site.register(UsersSilant)
+admin.site.register(CustomUser)

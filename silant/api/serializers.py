@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from users.models import CustomUser
 from silant.backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
                                    ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
                                    ClientG, Sersvice, VidTOG, TO)
@@ -6,8 +7,8 @@ from silant.backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMash
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Account
-        fields = ['id', 'account_name', 'users', 'created']
+        model = CustomUser
+        fields = '__all__'
 
 
 class ModMotorGSerializer(serializers.ModelSerializer):
@@ -55,12 +56,6 @@ class RecoveryMethodGSerializer(serializers.ModelSerializer):
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complaint
-        fields = '__all__'
-
-
-class UsersSilantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UsersSilant
         fields = '__all__'
 
 

@@ -41,18 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'silant',
     'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
     'django_filters',
-    'backend.apps.BackendConfig',
-    'frontend.apps.FrontendConfig',
+
+    'silant',
+    'users',
 
 ]
 
