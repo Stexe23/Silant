@@ -1,14 +1,9 @@
 from rest_framework import serializers
-from users.models import CustomUser
+
+
 from silant.backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
                                    ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
-                                   ClientG, Sersvice, VidTOG, TO)
-
-
-class AccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = '__all__'
+                                   ClientG, Sersvice, VidTOG, TO, FailureNodeReference)
 
 
 class ModMotorGSerializer(serializers.ModelSerializer):
@@ -86,4 +81,10 @@ class VidTOGSerializer(serializers.ModelSerializer):
 class TOSerializer(serializers.ModelSerializer):
     class Meta:
         model = TO
+        fields = '__all__'
+
+
+class FailureNodeReferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FailureNodeReference
         fields = '__all__'
