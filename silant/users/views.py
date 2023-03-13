@@ -1,34 +1,33 @@
+from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 
-from rest_framework.authtoken.views import ObtainAuthToken
+from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
+from users.serializers import UserSerializer, IssueTokenRequestSerializer, TokenSeriazliser
 
-@api_view(['GET'])
-def some_request(request):
-    print('This user is: ', request.user)
-    print(request.user.is_authenticated)
-    return Response(status=status.HTTP_200_OK, data={'data': 'Вот так'})
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def issue_token(request: Request):
+    serializer = IssueTokenRequestSerializer(data=request.data)
+    if serializer.is_valid():
+        authenticated_user = authenticate(**serializer.validated_data)
+        try:
+            token = Token.objects.get(user=authenticated_user)
+        except Token.DoesNotExist:
+            token = Token.objects.create(user=authenticated_user)
+        return Response(TokenSeriazliser(token).data)
+    else:
+        return Response(serializer.errors, status=400)
 
-
-class CustomAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-
-        if not serializer.is_valid():
-            return Response({'authenticated': False})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'id': user.pk,
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.first_name,
-            'token': token.key,
-            'role': user.role,
-            'authenticated': True,
-        })
+@api_view()
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def user(request: Request):
+    return Response({
+        'data': UserSerializer(request.user).data
+    })

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
                      ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
-                     ClientG, Sersvice, VidTOG, TO)
+                     ClientG, Sersvice, VidTOG, TO, FailureNodeReference)
 # Register your models here.
 
 admin.site.register(ModMotorG)
@@ -10,6 +10,7 @@ admin.site.register(ModDriveBridgeG)
 admin.site.register(ModTransmissionG)
 admin.site.register(ModMashinsG)
 admin.site.register(ModControllBridgeG)
+admin.site.register(FailureNodeReference)
 
 admin.site.register(Mashins)
 admin.site.register(RecoveryMethodG)

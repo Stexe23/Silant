@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+
+from users import views
 
 urlpatterns = [
-    path('test/', views.some_request),
-    path('api-token/', views.CustomAuthToken.as_view()),
+    path('api/user', views.user, name='user'),
+    path('api/login', views.issue_token, name='issue_token'),
 ]

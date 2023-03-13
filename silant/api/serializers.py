@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
 
-from silant.backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
-                                   ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
-                                   ClientG, Sersvice, VidTOG, TO, FailureNodeReference)
+from backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
+                            ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
+                            ClientG, Sersvice, VidTOG, TO, FailureNodeReference)
 
 
 class ModMotorGSerializer(serializers.ModelSerializer):

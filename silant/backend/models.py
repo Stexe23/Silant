@@ -1,12 +1,12 @@
 import datetime
 from django.db import models
 
-from silant.users.models import CustomUser
+from users.models import CustomUser
 
 
 # Справочник компаний
 class Sersvice(models.Model):
-    name = models.ForeignKey(CustomUser, verbose_name='Сервисная компания', related_name='service_company',
+    name = models.ForeignKey(CustomUser, verbose_name='Сервисная компания',
                              on_delete=models.CASCADE)
     description = models.TextField('Описание', max_length=500, null=True, blank=True)
 
@@ -125,8 +125,12 @@ class RecoveryMethodG(models.Model):
 # Справочник клиентов
 class ClientG(models.Model):
 
-    name = models.ForeignKey(CustomUser, verbose_name='Клиент', related_name='client', on_delete=models.CASCADE)
+    name = models.ForeignKey(CustomUser, verbose_name='Клиент', on_delete=models.CASCADE)
     description = models.TextField('Описание', max_length=500, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Клиент'
+        verbose_name_plural = 'Клиент'
 
     def __str__(self):
         return f'{self.name}'
@@ -152,7 +156,7 @@ class Mashins(models.Model):
         verbose_name_plural = 'Машины'
 
     zav_nom_mashins = models.CharField('Зав. № машины', primary_key=True, null=False, max_length=32, unique=True)
-    model_mashins = models.ForeignKey(ModMashinsG, verbose_name='Модель машины',on_delete=models.CASCADE,
+    model_mashins = models.ForeignKey(ModMashinsG, verbose_name='Модель машины', on_delete=models.CASCADE,
                                       related_name='model_mashins')
 
     model_motor = models.ForeignKey(ModMotorG, verbose_name='Модель двигателя', on_delete=models.CASCADE,
@@ -179,9 +183,9 @@ class Mashins(models.Model):
     consignee = models.CharField('Грузополучатель (конечный потребитель)', max_length=250, blank=True, null=True)
     delivery_address = models.TextField('Адрес поставки (эксплуатации)', max_length=250, blank=True, null=True) 
     equipment = models.TextField('Комплектация (доп. опции)', max_length=250, blank=True, null=True)  
-    client = models.ForeignKey(CustomUser, verbose_name='Клиент', on_delete=models.CASCADE, related_name='client',
-                               blank=True, null=True)
-    service_company = models.ForeignKey(CustomUser, verbose_name='Сервисная компания', on_delete=models.CASCADE,
+    client = models.ForeignKey(ClientG, verbose_name='Клиент', on_delete=models.CASCADE,
+                               related_name='client', blank=True, null=True)
+    service_company = models.ForeignKey(Sersvice, verbose_name='Сервисная компания', on_delete=models.CASCADE,
                                         related_name='service_company', blank=True, null=True)
       
     def __str__(self) -> str:
@@ -201,7 +205,7 @@ class TO(models.Model):
     num_order = models.CharField('№ заказ-наряда', max_length=32, unique=True)
     date_order = models.DateField('Дата заказ-наряда')
 
-    service_TO = models.ForeignKey(CustomUser, verbose_name='Сервисная компания', on_delete=models.CASCADE)
+    service_TO = models.ForeignKey(Sersvice, verbose_name='Сервисная компания', on_delete=models.CASCADE)
     mashins_TO = models.ForeignKey(Mashins, verbose_name='Машина', on_delete=models.CASCADE)
 
     def __str__(self) -> str:

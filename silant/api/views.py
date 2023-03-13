@@ -1,14 +1,14 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 
-from silant.backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
-                                   ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
-                                   ClientG, Sersvice, VidTOG, TO, FailureNodeReference, )
-from serializers import (ModMotorGSerializer, ModTransmissionGSerializer, MashinsSerializer, ModMashinsGSerializer,
-                         ModDriveBridgeGSerializer, ModControllBridgeGSerializer, RecoveryMethodGSerializer,
-                         ComplaintSerializer, NatureRefusalGSerializer, SersviceSerializer,
-                         VidTOGSerializer, TOSerializer, AccountSerializer, FailureNodeReferenceSerializer,
-                         ClientGSerializer)
+from backend.models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDriveBridgeG,
+                            ModControllBridgeG, RecoveryMethodG, Complaint, NatureRefusalG,
+                            ClientG, Sersvice, VidTOG, TO, FailureNodeReference, )
+from .serializers import (ModMotorGSerializer, ModTransmissionGSerializer, MashinsSerializer, ModMashinsGSerializer,
+                          ModDriveBridgeGSerializer, ModControllBridgeGSerializer, RecoveryMethodGSerializer,
+                          ComplaintSerializer, NatureRefusalGSerializer, SersviceSerializer,
+                          VidTOGSerializer, TOSerializer, FailureNodeReferenceSerializer,
+                          ClientGSerializer)
 
 
 # Список моделей моторов
