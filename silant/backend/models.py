@@ -233,13 +233,9 @@ class Complaint(models.Model):
     date_recovery = models.DateField('Дата восстановления', blank=True, null=True)
     downtime = models.IntegerField('Время простоя техники (дней)', default=0)
 
-    def get_downtime(self):
-        drec = datetime.datetime(self.date_recovery)
-        dref = datetime.datetime(self.date_refusal)
-        result = drec - dref
-        self.downtime = result.days
-        self.save()
-        return f'{self.downtime}'
+    def downtime(self):
+        deltatime = self.date_recovery - self.date_refusal
+        return deltatime.days
 
     def __str__(self):
         return f'{self.mashins_c} {self.reason_refusal}: {self.date_refusal}/{self.date_recovery}'
