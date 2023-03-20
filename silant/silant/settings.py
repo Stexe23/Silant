@@ -42,14 +42,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'import_export',
-    'django_filters',
-
-    "backend",
+    'backend',
     'users',
     'api',
+
+    'rest_framework',
+    'import_export',
+    'django_filters',
 
 ]
 

@@ -31,7 +31,6 @@
             <th width="20%">Используемые запасные части</th>
             <th width="30%">Дата восстановления</th>
             <th width="20%">Время простоя техники</th>
-            <th width="30%">Сервисная компания</th>
             {% if user.is_superuser or user.groups.first.name == "Менеджер" or user.groups.first.name == "Сервисная организация" %}
             <th width="3%"></th>
             {% endif %}
@@ -40,19 +39,14 @@
     <tbody>
     {% for obj in object_list %}
         <tr>
-            <td>{{obj.date_failure|date:"d.m.Y"}}</td>
-            <td>{{obj.operating_time}}</td>
-            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'node_failure' %}">{{obj.node_failure}}</span></td>
-            <td>{{obj.description_failure}}</td>
-            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'method_recovery' %}">{{obj.method_recovery}}</span></td>
-            <td>{{obj.repair_parts}}</td>
+            <td>{{obj.date_refusal|date:"d.m.Y"}}</td>
+            <td>{{obj.mtdf_c}}</td>
+            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'failure_node' %}">{{obj.failure_node}}</span></td>
+            <td>{{obj.reason_refusal}}</td>
+            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'recovery_method' %}">{{obj.recovery_method}}</span></td>
+            <td>{{obj.spare}}</td>
             <td>{{obj.date_recovery|date:"d.m.Y"}}</td>
             <td>{{obj.downtime}}</td>
-            {% if obj.service_company %}
-            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'service_company' %}">{{obj.service_company}}</span></td>
-            {% else %}
-            <td>Нет компании</td>
-            {% endif %}
             {% if user.is_superuser or user.groups.first.name == "Менеджер" or user.groups.first.name == "Сервисная организация" %}
             <td>
                 <div class="actions">

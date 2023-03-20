@@ -11,7 +11,7 @@ from .models import (ModMotorG, ModTransmissionG, Mashins, ModMashinsG, ModDrive
 
 
 # Мотор
-class MotorcResource(resources.ModelResource):
+class MotorResource(resources.ModelResource):
     class Meta:
         model = ModMotorG
         report_skipped = True
@@ -20,7 +20,7 @@ class MotorcResource(resources.ModelResource):
 
 @admin.register(ModMotorG)
 class MotorAdmin(ImportExportMixin, admin.ModelAdmin):
-    resource_class = MotorcResource
+    resource_class = MotorResource
     list_display = ('id', 'name', 'description',)
     filter = ('name',)
 
@@ -248,7 +248,7 @@ class ComplaintAdmin(ImportExportMixin, admin.ModelAdmin):
                     'spare',
                     'date_recovery',
                     'downtime',
-                  )
+                    )
     filter = ('mashins_c',)
 
 
@@ -280,7 +280,3 @@ class SersviceAdmin(ImportExportMixin, admin.ModelAdmin):
     resource_class = SersviceResource
     list_display = ('id', 'name', 'description',)
     filter = ('name',)
-
-
-
-

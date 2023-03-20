@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from rest_framework.reverse import reverse
 
 from users.models import CustomUser
 
@@ -191,6 +192,9 @@ class Mashins(models.Model):
     def __str__(self) -> str:
         return f'{self.zav_nom_mashins}: {self.model_mashins}'
 
+    def get_absolute_url(self):
+        return reverse('article-view', args=(str(self.pk),))
+
 
 # Таблица по тех. обслуживанию
 class TO(models.Model):
@@ -210,6 +214,9 @@ class TO(models.Model):
 
     def __str__(self) -> str:
         return f'{self.mashins_TO}: {self.vid_TO}'
+
+    def get_absolute_url(self):
+        return reverse('article-view', args=(str(self.pk),))
 
 
 # Таблица рекламаций

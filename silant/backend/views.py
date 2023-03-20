@@ -81,7 +81,7 @@ class CarDescriptionView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        car = Mashins.objects.all(pk=self.kwargs["pk"])
+        car = Mashins.objects.get(pk=self.kwargs["pk"])
         atribute = context['atribute']
         if atribute == 'model_mashins':
             context['atribute'] = car.model_mashins
@@ -159,7 +159,7 @@ class MaintenanceListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
             try:
                 profile = Sersvice.objects.get(name=user)
                 if profile.is_service:
-                    return TO.objects.filter(service_company=profile.service_company)
+                    return TO.objects.filter(service_TO=profile.service_TO)
             except:
                 return TO.objects.filter(car__client=user)
         else:
@@ -201,7 +201,7 @@ class MaintenanceCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
 
     def get_queryset(self):
         car = Mashins.objects.get(pk=self.kwargs["pk"])
-        return TO.objects.filter(car=car)
+        return TO.objects.filter(mashins_TO=car)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -262,7 +262,7 @@ class ComplaintCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListView
 
     def get_queryset(self):
         car = Mashins.objects.get(pk=self.kwargs["pk"])
-        return Complaint.objects.filter(car=car)
+        return Complaint.objects.filter(mashins_c=car)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
