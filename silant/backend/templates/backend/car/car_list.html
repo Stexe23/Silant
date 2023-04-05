@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% csrf_token %}
 <div class="client">
 <i class="silant silant-client"></i>
 {% if user.is_superuser %}
@@ -8,7 +9,7 @@
 {% elif user.groups.first.name == "Менеджер" %}
     <h2>Менеджер {{user.first_name}}</h2>
 {% elif user.groups.first.name == "Сервисная организация" %}
-    <h2>Сервисная организация {{user.userprofile.service_company}}</h2>
+    <h2>Сервисная организация {{user.first_name}}</h2>
 {% else %}
     <h2>Клиент {{user.first_name}} </h2>
 {% endif %}

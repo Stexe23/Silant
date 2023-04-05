@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
@@ -5,8 +6,11 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated
+
 import users
 from .models import *
 from .forms import *
@@ -38,18 +42,19 @@ class CarListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            user = users.objects.get(pk=self.request.user.pk)
+            user = CustomUser.objects.get(pk=self.request.user.pk)
+
             try:
-                profile = ClientG.objects.get(name=user)
-                if profile.is_service:
-                    return Mashins.objects.filter(service_company=profile.service_company)
+                clients = ClientG.objects.get(name_id=user.pk)
+                return Mashins.objects.filter(client=clients)
             except:
-                return Mashins.objects.filter(client=user)
+                servic = Sersvice.objects.get(name_id=user.pk)
+                return Mashins.objects.filter(service_company=servic)
         else:
             return Mashins.objects.all()
 
 
-class CarDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class CarDetailView(LoginRequiredMixin, DetailView):
     permission_required = 'backend.view_car'
     model = Mashins
     template_name = 'backend/car/car_view.html'
@@ -148,26 +153,26 @@ class CarDetailAPI(generics.RetrieveAPIView):
         return obj
 
 
-class MaintenanceListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'backend.view_maintenance'
+class MaintenanceListView(LoginRequiredMixin, ListView):
     model = TO
     template_name = 'backend/TO/maintenance_list.html'
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            user = users.objects.get(pk=self.request.user.pk)
+            user = CustomUser.objects.get(pk=self.request.user.pk)
+
             try:
-                profile = Sersvice.objects.get(name=user)
-                if profile.is_service:
-                    return TO.objects.filter(service_TO=profile.service_TO)
+                clients = ClientG.objects.get(name_id=user.pk)
+                return Mashins.objects.filter(client=clients)
             except:
-                return TO.objects.filter(car__client=user)
+                servic = Sersvice.objects.get(name_id=user.pk)
+                return Mashins.objects.filter(service_company=servic)
         else:
             return TO.objects.all()
 
 
 class MaintenanceCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'backend.add_maintenance'
+    permission_required = 'backend.add_TO'
     model = TO
     form_class = MaintenanceForm
     template_name = 'backend/TO/maintenance_create.html'
@@ -175,7 +180,7 @@ class MaintenanceCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
 
 
 class MaintenanceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'backend.change_maintenance'
+    permission_required = 'backend.change_TO'
     model = TO
     form_class = MaintenanceForm
     template_name = 'backend/TO/maintenance_update.html'
@@ -183,19 +188,19 @@ class MaintenanceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
 
 
 class MaintenanceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'backend.delete_maintenance'
+    permission_required = 'backend.delete_TO'
     model = TO
     template_name_suffix = '_confirm_delete'
     success_url = reverse_lazy('maintenance_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["type"] = 'maintenance'
+        context["vid_TO"] = 'maintenance'
         return context
 
 
 class MaintenanceCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'backend.view_maintenance'
+    permission_required = 'backend.view_TO'
     model = TO
     template_name = 'backend/TO/maintenance_car.html'
 
@@ -216,13 +221,17 @@ class ComplaintListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            user = users.objects.get(pk=self.request.user.pk)
+            user = CustomUser.objects.get(pk=self.request.user.pk)
+
             try:
-                profile = ClientG.objects.get(name=user)
-                if profile.is_service:
-                    return Complaint.objects.filter(service_company=profile.service_company)
+                clients = ClientG.objects.get(name_id=user.pk)
+                mash = Mashins.objects.filter(client=clients)
+               # coml = Complaint.objects.filter(mashins_c_id=mash)
+                print(mash)
+                return Mashins.objects.filter(client=clients)
             except:
-                return Complaint.objects.filter(car__client=user)
+                servic = Sersvice.objects.get(name_id=user.pk)
+                return Complaint.objects.filter(service=servic)
         else:
             return Complaint.objects.all()
 
@@ -278,11 +287,11 @@ class MaintenanceDescriptionView(TemplateView):
         maintenance = TO.objects.get(pk=self.kwargs["pk"])
         atribute = context['atribute']
         if atribute == 'type':
-            context['atribute'] = maintenance.type
-            context['description'] = maintenance.type.description
-        elif atribute == 'service_company':
-            context['atribute'] = maintenance.service_company
-            context['description'] = maintenance.service_company.description
+            context['atribute'] = maintenance.vid_TO
+            context['description'] = maintenance.vid_TO.description
+        elif atribute == 'service_TO':
+            context['atribute'] = maintenance.service_TO
+            context['description'] = maintenance.service_TO.description
         return context
 
 
@@ -293,41 +302,46 @@ class ComplaintDescriptionView(TemplateView):
         context = super().get_context_data(**kwargs)
         complaint = Complaint.objects.get(pk=self.kwargs["pk"])
         atribute = context['atribute']
-        if atribute == 'node_failure':
-            context['atribute'] = complaint.node_failure
-            context['description'] = complaint.node_failure.description
-        elif atribute == 'method_recovery':
-            context['atribute'] = complaint.method_recovery
-            context['description'] = complaint.method_recovery.description
-        elif atribute == 'service_company':
-            context['atribute'] = complaint.service_company
-            context['description'] = complaint.service_company.description
+        if atribute == 'failure_node':
+            context['atribute'] = complaint.failure_node
+            context['description'] = complaint.failure_node.description
+        elif atribute == 'recovery_method':
+            context['atribute'] = complaint.recovery_method
+            context['description'] = complaint.recovery_method.description
+        elif atribute == 'mashins_c':
+            context['atribute'] = complaint.mashins_c
+            context['description'] = complaint.mashins_c.description
+        elif atribute == 'service':
+            context['atribute'] = complaint.service
+            context['description'] = complaint.service.description
         return context
 
 
 # API
 class MaintenanceListAPI(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = TOSerializer
     queryset = TO.objects.all()
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class MaintenanceUserListAPI(generics.ListAPIView):
     serializer_class = TOSerializer
+    permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        try:
-            user = int(self.kwargs['user'])
-        except:
-            user = self.kwargs['user']
-        if type(user) == int:
-            queryset = TO.objects.filter(car__client=user)
-        elif type(user) == str:
-            queryset = TO.objects.filter(car__client__username=user)
-        return queryset
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class MaintenanceDetailAPI(generics.RetrieveAPIView):
     serializer_class = TOSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         obj = TO.objects.get(pk=self.kwargs['pk'])
@@ -337,6 +351,11 @@ class MaintenanceDetailAPI(generics.RetrieveAPIView):
 class ComplaintListAPI(generics.ListAPIView):
     serializer_class = ComplaintSerializer
     queryset = Complaint.objects.all()
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class ComplaintUserListAPI(generics.ListAPIView):
@@ -358,5 +377,6 @@ class ComplaintDetailAPI(generics.RetrieveAPIView):
     serializer_class = ComplaintSerializer
 
     def get_object(self):
-        obj = Complaint.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
         return obj

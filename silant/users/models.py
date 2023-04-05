@@ -17,8 +17,6 @@ class CustomUser(AbstractUser):
 
     role = models.CharField('Роль пользователя', max_length=10, choices=CHOICES, default='Клиент')
 
-    def is_upperclass(self):
-        return self.role in {self.CLIENT, self.SERVICE}
 
     def __str__(self):
         return f'{self.first_name}'

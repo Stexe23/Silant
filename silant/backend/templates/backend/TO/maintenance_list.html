@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% csrf_token %}
 <div class="client">
-    <i class="silant silant-client"></i>
-    {% if user.is_superuser %}
-        <h2>Администратор</h2>
-    {% elif user.groups.first.name == "Менеджер" %}
-        <h2>Менеджер {{user.first_name}}</h2>
-    {% elif user.groups.first.name == "Сервисная организация" %}
-        <h2>Сервисная организация {{user.userprofile.service_company}}</h2>
-    {% else %}
-        <h2>Клиент {{user.first_name}} </h2>
-    {% endif %}
+<i class="silant silant-client"></i>
+{% if user.is_superuser %}
+    <h2>Администратор</h2>
+{% elif user.groups.first.name == "Менеджер" %}
+    <h2>Менеджер {{user.first_name}}</h2>
+{% elif user.groups.first.name == "Сервисная организация" %}
+    <h2>Сервисная организация {{user.first_name}}</h2>
+{% else %}
+    <h2>Клиент {{user.first_name}} </h2>
+{% endif %}
 </div>
 <nav class="nav-panel">
     <ul>
@@ -33,8 +34,8 @@
             <th width="30%">Наработка, м/час</th>
             <th width="20%">№ заказ-наряда</th>
             <th width="20%">Дата заказ-наряда</th>
-            <th width="30%">Организация, проводившая ТО</th>
             <th width="30%">Машина</th>
+            <th width="30%">Организация, проводившая ТО</th>
             <th width="3%"></th>
         </tr>
     </thead>
@@ -46,12 +47,12 @@
             <td>{{obj.mtbf}}</td>
             <td>{{obj.num_order}}</td>
             <td>{{obj.date_order|date:"d.m.Y"}}</td>
+            <td><a href="{% url 'car_detail' obj.pk %}">{{obj.mashins}}</a></td>
             {% if obj.service_TO %}
             <td><span class="description-js" data-url="{% url 'maintenance_description' obj.pk 'service_TO' %}">{{obj.service_TO}}</span></td>
             {% else %}
             <td>Нет компании</td>
             {% endif %}
-            td><a href="{% url 'car_detail' obj.car.pk %}">{{obj.car}}</a></td>
             <td>
                 <div class="actions">
                     <a class="update" href="{% url 'maintenance_update' obj.pk %}"><i class="fas fa-pencil-alt"></i></a>

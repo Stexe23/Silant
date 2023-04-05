@@ -12,8 +12,8 @@ class MaintenanceForm(forms.ModelForm):
     class Meta:
         model = TO
         fields = '__all__'
-        widgets ={
-            'type': forms.RadioSelect()
+        widgets = {
+            'vid_TO': forms.RadioSelect()
         }
 
 

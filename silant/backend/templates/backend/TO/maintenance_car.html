@@ -6,11 +6,12 @@
     <i class="silant silant-vehicle"></i>
     <h2>Машина {{car.car_number}}</h2>
 </div>
+</div>
 <nav class="nav-panel">
     <ul>
-        <li><a href="{% url 'car_detail' car.pk %}"><i class="silant silant-service"></i> Сведения</a></li>
-        <li class="active"><a href="{% url 'car_maintenance' car.pk %}"><i class="silant silant-maintenance"></i> ТО</a></li>
-        <li><a href="{% url 'car_complaint' car.pk %}"><i class="silant silant-complaint"></i> Рекламации</a></li>
+        <li class="active"><a href="{% url 'car_detail' obj.pk %}"><i class="silant silant-service"></i> Сведения</a></li>
+        <li><a href="{% url 'car_maintenance' obj.pk %}"><i class="silant silant-maintenance"></i> ТО</a></li>
+        <li><a href="{% url 'car_complaint' obj.pk %}"><i class="silant silant-complaint"></i> Рекламации</a></li>
     </ul>
 </nav>
 <h3>Информация о комплектации и технических характеристиках Вашей техники</h3>

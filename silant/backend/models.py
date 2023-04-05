@@ -190,7 +190,7 @@ class Mashins(models.Model):
                                         related_name='service_company', blank=True, null=True)
       
     def __str__(self) -> str:
-        return f'{self.zav_nom_mashins}: {self.model_mashins}'
+        return f'{self.zav_nom_mashins}'
 
     def get_absolute_url(self):
         return reverse('article-view', args=(str(self.pk),))
@@ -213,7 +213,7 @@ class TO(models.Model):
     mashins_TO = models.ForeignKey(Mashins, verbose_name='Машина', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f'{self.mashins_TO}: {self.vid_TO}'
+        return f'{self.mashins_TO}'
 
     def get_absolute_url(self):
         return reverse('article-view', args=(str(self.pk),))
@@ -239,6 +239,8 @@ class Complaint(models.Model):
     spare = models.TextField('Используемые запасные части', max_length=1000, blank=True, null=True) 
     date_recovery = models.DateField('Дата восстановления', blank=True, null=True)
     downtime = models.IntegerField('Время простоя техники (дней)', default=0)
+    service = models.ForeignKey(Sersvice, verbose_name='Сервисная компания', blank=True, null=True, on_delete=models.CASCADE)
+
 
     def downtime(self):
         deltatime = self.date_recovery - self.date_refusal

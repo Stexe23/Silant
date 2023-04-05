@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% csrf_token %}
 <div class="client">
-    <i class="silant silant-client"></i>
-    {% if user.is_superuser %}
-        <h2>Администратор</h2>
-    {% elif user.groups.first.name == "Менеджер" %}
-        <h2>Менеджер {{user.first_name}}</h2>
-    {% elif user.groups.first.name == "Сервисная организация" %}
-        <h2>Сервисная организация {{user.userprofile.service_company}}</h2>
-    {% else %}
-        <h2>Клиент {{user.first_name}} </h2>
-    {% endif %}
+<i class="silant silant-client"></i>
+{% if user.is_superuser %}
+    <h2>Администратор</h2>
+{% elif user.groups.first.name == "Менеджер" %}
+    <h2>Менеджер {{user.first_name}}</h2>
+{% elif user.groups.first.name == "Сервисная организация" %}
+    <h2>Сервисная организация {{user.first_name}}</h2>
+{% else %}
+    <h2>Клиент {{user.first_name}} </h2>
+{% endif %}
 </div>
 <nav class="nav-panel">
     <ul>
@@ -56,9 +57,9 @@
             <td>{{obj.spare}}</td>
             <td>{{obj.date_recovery|date:"d.m.Y"}}</td>
             <td>{{obj.downtime}}</td>
-            <td><a href="{% url 'car_detail' obj.car.pk %}">{{obj.car}}</a></td>
-            {% if obj.service_company %}
-            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'service_company' %}">{{obj.service_company}}</span></td>
+            <td><a href="{% url 'car_detail' obj.pk %}">{{obj.mashins_c}}</a></td>
+            {% if obj.service %}
+            <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'service' %}">{{obj.service}}</span></td>
             {% else %}
             <td>Нет компании</td>
             {% endif %}

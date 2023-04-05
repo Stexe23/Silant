@@ -1,0 +1,20 @@
+managertest - Менеджер
+plkj8521
+
+clienttest1
+clienttest2
+clienttest3
+clienttest4
+clienttest5
+clienttest6
+clienttest7
+tgbnji93
+
+servistest0 
+servistest1
+servistest2
+servistest3
+ergb7504
+
+admin
+123456
