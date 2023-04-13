@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
+{% block content
+{% csrf_token %}
 <a class="back-page" href="{% url 'car_list' %}"><i class="fas fa-long-arrow-alt-left"></i>Назад</a>
 <div class="client">
     <i class="silant silant-vehicle"></i>

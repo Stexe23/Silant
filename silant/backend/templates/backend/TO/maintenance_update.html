@@ -5,27 +5,27 @@
 <h3>Изменение ТО</h3>
 <form class="form" name="maintenanceForm" method="post" action="{{request.path}}">
     {% csrf_token %}
-    <div><label for="id_date">{{form.date.label}}</label> {{form.date}}</div>
+    <div><label for="id_date_TO">{{form.date_TO.label}}</label> {{form.date_TO}}</div>
     <div class="united">
-        <label for="id_car">{{form.car.label}}</label> {{form.car}}
-        <label for="id_operating_time">{{form.operating_time.label}}</label> {{form.operating_time}}
+        <label for="mashins_TO">{{form.mashins_TO.label}}</label> {{form.mashins_TO}}
+        <label for="mtbf">{{form.mtbf.label}}</label> {{form.mtbf}}
     </div>
     <div>{{form.type.label}}
-        <div class="choices"> 
+        <div class="choices">
             {% for i, item in form.fields.type.widget.choices %}
             <div class="check-field">
-                <input type="radio" name="type" value="{{i}}" id="id_type_{{i}}" {% if i == form.type.initial%}checked=""{% endif %}>
+                <input type="radio" name="type" value="{{i}}" id="id_type_{{i}}" {% for item in form.type.initial %}{% if i == item.pk %}checked=""{% endif %}{%endfor%}>
                 <label for="id_type_{{i}}" class="check" name="active-check"><i class="fas fa-check"></i></label>
                 <label for="id_type_{{i}}" class="check-text">{{item}}</label>
             </div>
             {% endfor %}
-        </div> 
+        </div>
     </div>
     <div class="united">
-        <label for="id_order_number">{{form.order_number.label}}</label> {{form.order_number}}
-        <label for="id_order_date">{{form.order_date.label}}</label> {{form.order_date}}
+        <label for="id_num_order">{{form.num_order.label}}</label> {{form.num_order}}
+        <label for="id_date_order">{{form.date_order.label}}</label> {{form.date_order}}
     </div>
-    <div><label for="id_service_company">{{form.service_company.label}}</label> {{form.service_company}}</div>
+    <div><label for="id_service_TO">{{form.service_TO.label}}</label> {{form.service_TO}}</div>
     <button type="submit">Сохранить</button>
 </form>
 {% endblock %}

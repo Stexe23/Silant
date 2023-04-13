@@ -16,7 +16,7 @@ from .models import *
 from .forms import *
 from api.serializers import *
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from rest_framework import generics
+from rest_framework import generics, request
 
 
 # Главная
@@ -46,10 +46,18 @@ class CarListView(LoginRequiredMixin, ListView):
 
             try:
                 clients = ClientG.objects.get(name_id=user.pk)
-                return Mashins.objects.filter(client=clients)
+                car = (Mashins.objects.filter(client=clients))
+                for mash_to in car:
+                    tab = Mashins.objects.all().filter(zav_nom_mashins=mash_to)
+                    return tab
             except:
                 servic = Sersvice.objects.get(name_id=user.pk)
-                return Mashins.objects.filter(service_company=servic)
+                car = Mashins.objects.filter(service_company=servic)
+                print(car)
+                for mash_to in car:
+                    tab = Mashins.objects.filter(zav_nom_mashins=mash_to)
+
+                    return tab
         else:
             return Mashins.objects.all()
 
@@ -65,7 +73,7 @@ class CarDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class CarCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CarCreateView(LoginRequiredMixin, CreateView):
     permission_required = 'backend.add_car'
     model = Mashins
     form_class = CarForm
@@ -73,7 +81,7 @@ class CarCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('car_list')
 
 
-class CarUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class CarUpdateView(LoginRequiredMixin, UpdateView):
     permission_required = 'backend.change_car'
     model = Mashins
     form_class = CarForm
@@ -112,7 +120,7 @@ class CarDescriptionView(TemplateView):
         return context
 
 
-class CarDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class CarDeleteView(LoginRequiredMixin, DeleteView):
     permission_required = 'backend.delete_car'
     model = Mashins
     template_name_suffix = '_confirm_delete'
@@ -163,15 +171,19 @@ class MaintenanceListView(LoginRequiredMixin, ListView):
 
             try:
                 clients = ClientG.objects.get(name_id=user.pk)
-                return Mashins.objects.filter(client=clients)
+                car = Mashins.objects.filter(client=clients)
+                for mash_to in car:
+                    return TO.objects.filter(mashins_TO=mash_to)
             except:
                 servic = Sersvice.objects.get(name_id=user.pk)
-                return Mashins.objects.filter(service_company=servic)
+                car = Mashins.objects.filter(service_company=servic)
+                for mash_to in car:
+                    return TO.objects.filter(mashins_TO=mash_to)
         else:
             return TO.objects.all()
 
 
-class MaintenanceCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class MaintenanceCreateView(LoginRequiredMixin, CreateView):
     permission_required = 'backend.add_TO'
     model = TO
     form_class = MaintenanceForm
@@ -179,7 +191,7 @@ class MaintenanceCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
     success_url = reverse_lazy('maintenance_list')
 
 
-class MaintenanceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class MaintenanceUpdateView(LoginRequiredMixin, UpdateView):
     permission_required = 'backend.change_TO'
     model = TO
     form_class = MaintenanceForm
@@ -187,7 +199,7 @@ class MaintenanceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
     success_url = reverse_lazy('maintenance_list')
 
 
-class MaintenanceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class MaintenanceDeleteView(LoginRequiredMixin, DeleteView):
     permission_required = 'backend.delete_TO'
     model = TO
     template_name_suffix = '_confirm_delete'
@@ -199,7 +211,7 @@ class MaintenanceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
         return context
 
 
-class MaintenanceCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class MaintenanceCarListView(LoginRequiredMixin, ListView):
     permission_required = 'backend.view_TO'
     model = TO
     template_name = 'backend/TO/maintenance_car.html'
@@ -214,7 +226,7 @@ class MaintenanceCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
         return context
 
 
-class ComplaintListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ComplaintListView(LoginRequiredMixin, ListView):
     permission_required = 'backend.view_complaint'
     model = Complaint
     template_name = 'backend/complaint/complaint_list.html'
@@ -225,18 +237,20 @@ class ComplaintListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
             try:
                 clients = ClientG.objects.get(name_id=user.pk)
-                mash = Mashins.objects.filter(client=clients)
-               # coml = Complaint.objects.filter(mashins_c_id=mash)
-                print(mash)
-                return Mashins.objects.filter(client=clients)
+                car = Mashins.objects.filter(client=clients)
+                for mash_to in car:
+                    if mash_to != None:
+                        return Complaint.objects.filter(mashins_c=mash_to)
             except:
                 servic = Sersvice.objects.get(name_id=user.pk)
-                return Complaint.objects.filter(service=servic)
+                car = Mashins.objects.filter(service_company=servic)
+                for mash_to in car:
+                    return Complaint.objects.all().filter(mashins_c=mash_to)
         else:
             return Complaint.objects.all()
 
 
-class ComplaintCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class ComplaintCreateView(LoginRequiredMixin, CreateView):
     permission_required = 'backend.add_complaint'
     model = Complaint
     form_class = ComplaintForm
@@ -244,7 +258,7 @@ class ComplaintCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     success_url = reverse_lazy('complaint_list')
 
 
-class ComplaintUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ComplaintUpdateView(LoginRequiredMixin, UpdateView):
     permission_required = 'backend.change_complaint'
     model = Complaint
     form_class = ComplaintForm
@@ -252,7 +266,7 @@ class ComplaintUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     success_url = reverse_lazy('complaint_list')
 
 
-class ComplaintDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
     permission_required = 'backend.delete_complaint'
     model = Complaint
     template_name_suffix = '_confirm_delete'
@@ -264,7 +278,7 @@ class ComplaintDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
         return context
 
 
-class ComplaintCarListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ComplaintCarListView(LoginRequiredMixin, ListView):
     permission_required = 'backend.view_complaint'
     model = Complaint
     template_name = 'backend/complaint/complaint_car.html'

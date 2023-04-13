@@ -1,3 +1,5 @@
+from abc import ABC
+
 from rest_framework.serializers import Serializer, ModelSerializer, CharField
 from rest_framework.authtoken.models import Token
 
