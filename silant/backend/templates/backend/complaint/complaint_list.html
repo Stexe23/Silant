@@ -46,8 +46,9 @@
             {% endif %}
         </tr>
     </thead>
-    <tbody>
-    {% for obj in object_list %}
+    {% for m in mashins_c %}
+        <tbody>
+    {% for obj in m %}
         <tr>
             <td>{{obj.date_refusal|date:"d.m.Y"}}</td>
             <td>{{obj.mtdf_c}}</td>
@@ -73,6 +74,7 @@
             {% endif %}
         </tr>
     {% endfor %}
+        {% endfor %}
     </tbody>
 </table>
 </section>

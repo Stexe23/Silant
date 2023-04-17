@@ -37,8 +37,55 @@ class CarSearchView(ListView):
 
 
 class CarListView(LoginRequiredMixin, ListView):
-    model = Mashins
+    model = Mashins,
     template_name = 'backend/car/car_list.html'
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            user = CustomUser.objects.get(pk=self.request.user.pk)
+            try:
+                clients = ClientG.objects.get(name_id=user)
+                car = Mashins.objects.filter(client=clients)
+                return car
+            except:
+                servic = Sersvice.objects.get(name_id=user)
+                car = Mashins.objects.filter(service_company=servic)
+                return car
+        else:
+            return Mashins.objects.all()
+
+
+class MaintenanceListView(LoginRequiredMixin, ListView):
+    model = TO
+    ordering = 'mashins_TO'
+    template_name = 'backend/TO/maintenance_list.html'
+    context_object_name = 'mashins_TO'
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            user = CustomUser.objects.get(pk=self.request.user.pk)
+
+            try:
+                clients = ClientG.objects.filter(name_id=user.pk)
+                mashins = Mashins.objects.filter(client=clients)
+                for m in mashins:
+                    yield TO.objects.filter(mashins_TO=m)
+            except:
+                servic = Sersvice.objects.get(name_id=user.pk)
+                mashins = Mashins.objects.filter(service_company=servic)
+                print(mashins)
+                for i in list(mashins):
+                    yield TO.objects.filter(mashins_TO=i)
+        else:
+            return TO.objects.all()
+
+
+class ComplaintListView(LoginRequiredMixin, ListView):
+    permission_required = 'backend.view_complaint'
+    model = Complaint
+    template_name = 'backend/complaint/complaint_list.html'
+    ordering = 'mashins_c'
+    context_object_name = 'mashins_c'
 
     def get_queryset(self):
         if not self.request.user.is_staff:
@@ -46,20 +93,17 @@ class CarListView(LoginRequiredMixin, ListView):
 
             try:
                 clients = ClientG.objects.get(name_id=user.pk)
-                car = (Mashins.objects.filter(client=clients))
-                for mash_to in car:
-                    tab = Mashins.objects.all().filter(zav_nom_mashins=mash_to)
-                    return tab
+                mashins = Mashins.objects.filter(client=clients)
+                for m in mashins:
+                    yield Complaint.objects.filter(mashins_c=m)
             except:
-                servic = Sersvice.objects.get(name_id=user.pk)
-                car = Mashins.objects.filter(service_company=servic)
-                print(car)
-                for mash_to in car:
-                    tab = Mashins.objects.filter(zav_nom_mashins=mash_to)
-
-                    return tab
+                servic = Sersvice.objects.get(name_id=user)
+                mashins = Mashins.objects.filter(service_company=servic)
+                print(mashins)
+                for i in list(mashins):
+                    yield Complaint.objects.filter(mashins_c=i)
         else:
-            return Mashins.objects.all()
+            return Complaint.objects.all()
 
 
 class CarDetailView(LoginRequiredMixin, DetailView):
@@ -161,28 +205,6 @@ class CarDetailAPI(generics.RetrieveAPIView):
         return obj
 
 
-class MaintenanceListView(LoginRequiredMixin, ListView):
-    model = TO
-    template_name = 'backend/TO/maintenance_list.html'
-
-    def get_queryset(self):
-        if not self.request.user.is_staff:
-            user = CustomUser.objects.get(pk=self.request.user.pk)
-
-            try:
-                clients = ClientG.objects.get(name_id=user.pk)
-                car = Mashins.objects.filter(client=clients)
-                for mash_to in car:
-                    return TO.objects.filter(mashins_TO=mash_to)
-            except:
-                servic = Sersvice.objects.get(name_id=user.pk)
-                car = Mashins.objects.filter(service_company=servic)
-                for mash_to in car:
-                    return TO.objects.filter(mashins_TO=mash_to)
-        else:
-            return TO.objects.all()
-
-
 class MaintenanceCreateView(LoginRequiredMixin, CreateView):
     permission_required = 'backend.add_TO'
     model = TO
@@ -224,30 +246,6 @@ class MaintenanceCarListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["car"] = Mashins.objects.get(pk=self.kwargs["pk"])
         return context
-
-
-class ComplaintListView(LoginRequiredMixin, ListView):
-    permission_required = 'backend.view_complaint'
-    model = Complaint
-    template_name = 'backend/complaint/complaint_list.html'
-
-    def get_queryset(self):
-        if not self.request.user.is_staff:
-            user = CustomUser.objects.get(pk=self.request.user.pk)
-
-            try:
-                clients = ClientG.objects.get(name_id=user.pk)
-                car = Mashins.objects.filter(client=clients)
-                for mash_to in car:
-                    if mash_to != None:
-                        return Complaint.objects.filter(mashins_c=mash_to)
-            except:
-                servic = Sersvice.objects.get(name_id=user.pk)
-                car = Mashins.objects.filter(service_company=servic)
-                for mash_to in car:
-                    return Complaint.objects.all().filter(mashins_c=mash_to)
-        else:
-            return Complaint.objects.all()
 
 
 class ComplaintCreateView(LoginRequiredMixin, CreateView):

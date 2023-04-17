@@ -39,8 +39,10 @@
             <th width="3%"></th>
         </tr>
     </thead>
-    <tbody>
-    {% for obj in object_list %}
+
+    {% for m in mashins_TO %}
+        <tbody>
+    {% for obj in m %}
         <tr>
             <td>{{obj.date_TO|date:"d.m.Y"}}</td>
             <td><span class="description-js" data-url="{% url 'maintenance_description' obj.pk 'vid_TO' %}">{{obj.vid_TO}}</span></td>
@@ -61,7 +63,9 @@
             </td>
         </tr>
     {% endfor %}
+        {% endfor %}
     </tbody>
+
 </table>
 </section>
 {% endblock %}
