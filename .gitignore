@@ -1,8 +1,8 @@
 __pycache__/
-*.py[cod]
-db.sqlite3
+.dbeaver
 migrations/
-media/
+.idea
+
 # C extensions
 *.so
 
