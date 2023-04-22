@@ -39,7 +39,6 @@
             <th width="3%"></th>
         </tr>
     </thead>
-
     {% for m in mashins_TO %}
         <tbody>
     {% for obj in m %}
@@ -49,7 +48,7 @@
             <td>{{obj.mtbf}}</td>
             <td>{{obj.num_order}}</td>
             <td>{{obj.date_order|date:"d.m.Y"}}</td>
-            <td><a href="{% url 'car_detail' obj.pk %}">{{obj.mashins_TO}}</a></td>
+            <td><a href="{% url 'car_detail' obj.mashins_TO_id %}">{{obj.mashins_TO}}</a></td>
             {% if obj.service_TO %}
             <td><span class="description-js" data-url="{% url 'maintenance_description' obj.pk 'service_TO' %}">{{obj.service_TO}}</span></td>
             {% else %}

@@ -58,7 +58,7 @@
             <td>{{obj.spare}}</td>
             <td>{{obj.date_recovery|date:"d.m.Y"}}</td>
             <td>{{obj.downtime}}</td>
-            <td><a href="{% url 'car_detail' obj.pk %}">{{obj.mashins_c}}</a></td>
+            <td><a href="{% url 'car_detail' obj.mashins_c_id %}">{{obj.mashins_c}}</a></td>
             {% if obj.service %}
             <td><span class="description-js" data-url="{% url 'complaint_description' obj.pk 'service' %}">{{obj.service}}</span></td>
             {% else %}
